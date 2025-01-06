@@ -126,11 +126,15 @@ elif page == "Stock Information":
                 st.write(f"**Industry**: {stock_info.get('industry', 'N/A')}")
                 st.write(f"**Current Price**: {stock_info.get('currentPrice', 'N/A')}")
                 st.write(f"**Market Cap**: {stock_info.get('marketCap', 'N/A')}")
+                st.write(f"**PE Ratio**: {stock_info.get('trailingPE', 'N/A')}")
                 st.write(f"**52 Week High**: {stock_info.get('fiftyTwoWeekHigh', 'N/A')}")
                 st.write(f"**52 Week Low**: {stock_info.get('fiftyTwoWeekLow', 'N/A')}")
                 st.write(f"**Beta**: {stock_info.get('beta', 'N/A')}")
                 st.write(f"**Dividend Yield**: {stock_info.get('dividendYield', 'N/A')}")
                 st.write(f"**Volume**: {stock_info.get('volume', 'N/A')}")
+                st.write(f"**Country**: {stock_info.get('country', 'N/A')}")
+                description = stock_info.get('longBusinessSummary', 'No description available')
+                st.write(f"**Company Description**: {description}")
             except Exception as e:
                 st.error(f"Failed to fetch stock information: {str(e)}")
 
