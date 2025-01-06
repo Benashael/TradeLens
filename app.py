@@ -6,9 +6,56 @@ import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 from datetime import datetime
 
-def fetch_stock_info(symbol, exchange="NSE"):
-    ticker = f"{symbol}.{exchange}" if exchange != "NSE" else symbol  # For NSE, no need to prefix
-    stock = yf.Ticker(ticker)
+# Predefined stock symbols for each exchange
+stock_options = {
+    "NSE": [
+        "RELIANCE", "TCS", "INFY", "HDFCBANK", "ITC", "HINDUNILVR", "ICICIBANK", "SBIN", 
+        "KOTAKBANK", "BAJFINANCE", "BHARTIARTL", "ADANIENT", "AXISBANK", "LT", "MARUTI", 
+        "SUNPHARMA", "TITAN", "WIPRO", "ULTRACEMCO", "ASIANPAINT"
+    ],
+    "BSE": [
+        "500325", "532540", "500112", "500180", "532898", "500875", "500209", "500124", 
+        "532500", "532215", "532648", "500510", "500300", "500440", "500010", "500410", 
+        "500520", "500295", "500182", "500696"
+    ],
+    "NYSE": [
+        "AAPL", "MSFT", "GOOGL", "AMZN", "BRK-B", "JNJ", "NVDA", "XOM", "PG", "JPM", 
+        "V", "UNH", "TSLA", "MA", "HD", "CVX", "PFE", "KO", "ABBV", "LLY"
+    ],
+    "NASDAQ": [
+        "TSLA", "NVDA", "FB", "INTC", "AMZN", "GOOGL", "AAPL", "MSFT", "ADBE", "CMCSA", 
+        "CSCO", "PEP", "PYPL", "NFLX", "COST", "TXN", "INTU", "QCOM", "AMGN", "MRNA"
+    ],
+    "LSE": [
+        "VOD.L", "HSBA.L", "RDSB.L", "BP.L", "GLEN.L", "AZN.L", "ULVR.L", "RIO.L", 
+        "BARC.L", "DGE.L", "BATS.L", "PRU.L", "SHEL.L", "TSCO.L", "LLOY.L", "REL.L", 
+        "RR.L", "NG.L", "AAL.L", "STAN.L"
+    ]
+}
+
+# Function to check stock availability across exchanges
+def check_stock_availability(symbol):
+    available_in = []
+    for exchange, symbols in stock_options.items():
+        if symbol in symbols:
+            available_in.append(exchange)
+    return available_in if available_in else ["Not Available"]
+
+def fetch_stock_info(symbol, exchange):
+    # Format ticker based on exchange
+    exchange_formats = {
+        "NSE": symbol,            # NSE: Direct symbol
+        "BSE": f"{symbol}.BO",    # BSE: Append .BO
+        "NYSE": symbol,           # NYSE: Direct symbol
+        "NASDAQ": symbol,         # NASDAQ: Direct symbol
+        "LSE": f"{symbol}.L"      # LSE: Append .L
+    }
+
+    # Get the formatted ticker
+    formatted_symbol = exchange_formats.get(exchange, symbol)
+    
+    # Fetch stock information
+    stock = yf.Ticker(formatted_symbol)
     stock_info = stock.info
     return stock_info
 
@@ -53,34 +100,39 @@ if page  == "Home":
 
 elif page == "Stock Information":
     st.title("Stock Information")
+    st.write("Select a stock symbol and get details about its availability and key metrics.")
 
-    # User input for stock symbol and exchange
-    exchange = st.selectbox("Select Stock Exchange", ["NSE", "BSE", "LSE", "NYSE", "NASDAQ"])
-    symbol = st.text_input("Enter Stock Symbol", "AAPL")  # Default example: AAPL, TSLA, etc.
+    # Dropdown for selecting exchange
+    exchange = st.selectbox("Select Stock Exchange", list(stock_options.keys()))
+    
+    # Dropdown for selecting stock symbol
+    symbol = st.selectbox("Select Stock Symbol", stock_options[exchange])
 
-    if st.button("Get Stock Information"):
-        try:
-            stock_info = fetch_stock_info(symbol, exchange)
-            st.write(f"### {symbol} - Stock Information")
-            
-            # Displaying various stock details
-            st.write(f"**Company Name**: {stock_info.get('longName', 'N/A')}")
-            st.write(f"**Sector**: {stock_info.get('sector', 'N/A')}")
-            st.write(f"**Industry**: {stock_info.get('industry', 'N/A')}")
-            st.write(f"**Current Price**: ₹{stock_info.get('currentPrice', 'N/A')}")
-            st.write(f"**Market Cap**: ₹{stock_info.get('marketCap', 'N/A')}")
-            st.write(f"**PE Ratio**: {stock_info.get('trailingPE', 'N/A')}")
-            st.write(f"**52 Week High**: ₹{stock_info.get('fiftyTwoWeekHigh', 'N/A')}")
-            st.write(f"**52 Week Low**: ₹{stock_info.get('fiftyTwoWeekLow', 'N/A')}")
-            st.write(f"**Dividend Yield**: {stock_info.get('dividendYield', 'N/A')}%")
-            st.write(f"**Country**: {stock_info.get('country', 'N/A')}")
-            
-            # If you want to display a brief description
-            description = stock_info.get('longBusinessSummary', 'No description available')
-            st.write(f"**Company Description**: {description}")
+    # Button to get stock information
+    if st.button("Check Availability and Get Stock Information"):
+        # Check availability
+        availability = check_stock_availability(symbol)
+        if "Not Available" in availability:
+            st.error(f"The stock '{symbol}' is not available in any exchange.")
+        else:
+            st.success(f"The stock '{symbol}' is available in: {', '.join(availability)}")
 
-        except Exception as e:
-            st.error(f"Error fetching stock information: {str(e)}")
+            # Fetch and display stock information
+            try:
+                stock_info = fetch_stock_info(symbol, exchange)
+                st.write(f"### Stock Information for {symbol} ({exchange})")
+                st.write(f"**Company Name**: {stock_info.get('longName', 'N/A')}")
+                st.write(f"**Sector**: {stock_info.get('sector', 'N/A')}")
+                st.write(f"**Industry**: {stock_info.get('industry', 'N/A')}")
+                st.write(f"**Current Price**: {stock_info.get('currentPrice', 'N/A')}")
+                st.write(f"**Market Cap**: {stock_info.get('marketCap', 'N/A')}")
+                st.write(f"**52 Week High**: {stock_info.get('fiftyTwoWeekHigh', 'N/A')}")
+                st.write(f"**52 Week Low**: {stock_info.get('fiftyTwoWeekLow', 'N/A')}")
+                st.write(f"**Beta**: {stock_info.get('beta', 'N/A')}")
+                st.write(f"**Dividend Yield**: {stock_info.get('dividendYield', 'N/A')}")
+                st.write(f"**Volume**: {stock_info.get('volume', 'N/A')}")
+            except Exception as e:
+                st.error(f"Failed to fetch stock information: {str(e)}")
 
 elif page == "Stock Prediction":
     st.title("Stock Prediction and Analysis")
