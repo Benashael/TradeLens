@@ -87,14 +87,14 @@ def display_stock_information(stock_data_info):
         st.write("### Stock Information")
         
         # Display stock information in table format
-        st.write("**Basic Information**")
+        st.write("**Basic Information (In Tabular Format)**")
         basic_info = {
             "Symbol": stock_data_info.get('symbol', 'N/A'),
             "Company Name": stock_data_info.get('longName', 'N/A'),
             "Currency": stock_data_info.get('currency', 'N/A'),
             "Exchange": stock_data_info.get('exchange', 'N/A'),
         }
-        st.table(pd.DataFrame(list(basic_info.items()), columns=["Metric", "Value"]))
+        st.table(pd.DataFrame(list(basic_info.items()), columns=["**Metric**", "**Value**"]))
         
         st.write("**Market Data**")
         market_data = {
@@ -106,7 +106,7 @@ def display_stock_information(stock_data_info):
             "52 Week Low": stock_data_info.get('fiftyTwoWeekLow', 'N/A'),
             "52 Week High": stock_data_info.get('fiftyTwoWeekHigh', 'N/A'),
         }
-        st.table(pd.DataFrame(list(market_data.items()), columns=["Metric", "Value"]))
+        st.table(pd.DataFrame(list(market_data.items()), columns=["**Metric**", "**Value**"]))
         
         st.write("**Volume and Shares**")
         volume_data = {
@@ -115,7 +115,7 @@ def display_stock_information(stock_data_info):
             "Average Volume": stock_data_info.get('averageVolume', 'N/A'),
             "Shares Outstanding": stock_data_info.get('sharesOutstanding', 'N/A'),
         }
-        st.table(pd.DataFrame(list(volume_data.items()), columns=["Metric", "Value"]))
+        st.table(pd.DataFrame(list(volume_data.items()), columns=["**Metric**", "**Value**"]))
         
         st.write("**Dividends and Yield**")
         dividend_data = {
@@ -180,7 +180,7 @@ elif page == "Stock Information":
                 st.write(f"**Volume**: {stock_info.get('volume', 'N/A')}")
                 st.write(f"**Country**: {stock_info.get('country', 'N/A')}")
                 description = stock_info.get('longBusinessSummary', 'No description available')
-                st.write(f"**Company Description (Tabular Format)**: {description}")
+                st.write(f"**Company Description**: {description}")
                 stock_info = fetch_stock_info(symbol, exchange)
                 display_stock_information(stock_info)
             except Exception as e:
