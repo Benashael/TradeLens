@@ -46,7 +46,10 @@ def recommendation(past_data, future_predictions):
     else:
         return "Hold"
 
-page = st.sidebar.radio(["Home, "Stock Information", "Stock Prediction"])
+page = st.sidebar.radio(["Home", "Stock Information", "Stock Prediction"])
+
+if page  == "Home":
+    st.title()
 
 elif page == "Stock Information":
     st.title("Stock Information")
