@@ -112,11 +112,8 @@ elif page == "Stock Prediction":
             # Predictions
             future_dates, future_predictions = predict_stock_prices(data)
             #future_dates = pd.to_datetime(future_dates, origin='julian', unit='D')
-            try:
-                future_dates = pd.to_datetime(future_dates, origin='julian', unit='D')
-            except pd.errors.OutOfBoundsDatetime as e:
-                st.error("Error: Future dates exceed the supported range for conversion.")
-                st.stop()  # Stops execution if an error occurs
+            future_dates = np.clip(future_dates, a_min=1721425, a_max=2262448)  # Valid Julian dates
+            future_dates = pd.to_datetime(future_dates, origin='julian', unit='D')
 
 
             st.subheader("Stock Price Predictions for Next 30 Days")
