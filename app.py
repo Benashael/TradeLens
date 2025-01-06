@@ -94,7 +94,7 @@ def display_stock_information(stock_data_info):
             "Currency": stock_data_info.get('currency', 'N/A'),
             "Exchange": stock_data_info.get('exchange', 'N/A'),
         }
-        st.table(pd.DataFrame(list(basic_info.items()), columns=["**Metric**", "**Value**"]))
+        st.table(pd.DataFrame(list(basic_info.items()), columns=["Metric", "Value"]))
         
         st.write("**Market Data**")
         market_data = {
@@ -106,7 +106,7 @@ def display_stock_information(stock_data_info):
             "52 Week Low": stock_data_info.get('fiftyTwoWeekLow', 'N/A'),
             "52 Week High": stock_data_info.get('fiftyTwoWeekHigh', 'N/A'),
         }
-        st.table(pd.DataFrame(list(market_data.items()), columns=["**Metric**", "**Value**"]))
+        st.table(pd.DataFrame(list(market_data.items()), columns=["Metric", "Value"]))
         
         st.write("**Volume and Shares**")
         volume_data = {
@@ -115,7 +115,7 @@ def display_stock_information(stock_data_info):
             "Average Volume": stock_data_info.get('averageVolume', 'N/A'),
             "Shares Outstanding": stock_data_info.get('sharesOutstanding', 'N/A'),
         }
-        st.table(pd.DataFrame(list(volume_data.items()), columns=["**Metric**", "**Value**"]))
+        st.table(pd.DataFrame(list(volume_data.items()), columns=["Metric", "Value"]))
         
         st.write("**Dividends and Yield**")
         dividend_data = {
