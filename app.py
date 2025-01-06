@@ -81,6 +81,52 @@ def predict_stock_prices(data):
 
     return future_dates, future_predictions
 
+# Function to display stock information in a neat table format
+def display_stock_information(stock_data_info):
+    if stock_data_info is not None:
+        st.write("### Stock Information")
+        
+        # Display stock information in table format
+        st.write("**Basic Information**")
+        basic_info = {
+            "Symbol": stock_data_info.get('symbol', 'N/A'),
+            "Company Name": stock_data_info.get('longName', 'N/A'),
+            "Currency": stock_data_info.get('currency', 'N/A'),
+            "Exchange": stock_data_info.get('exchange', 'N/A'),
+        }
+        st.table(pd.DataFrame(list(basic_info.items()), columns=["Metric", "Value"]))
+        
+        st.write("**Market Data**")
+        market_data = {
+            "Current Price": stock_data_info.get('currentPrice', 'N/A'),
+            "Previous Close": stock_data_info.get('previousClose', 'N/A'),
+            "Open": stock_data_info.get('open', 'N/A'),
+            "Day Low": stock_data_info.get('dayLow', 'N/A'),
+            "Day High": stock_data_info.get('dayHigh', 'N/A'),
+            "52 Week Low": stock_data_info.get('fiftyTwoWeekLow', 'N/A'),
+            "52 Week High": stock_data_info.get('fiftyTwoWeekHigh', 'N/A'),
+        }
+        st.table(pd.DataFrame(list(market_data.items()), columns=["Metric", "Value"]))
+        
+        st.write("**Volume and Shares**")
+        volume_data = {
+            "Volume": stock_data_info.get('volume', 'N/A'),
+            "Market Volume": stock_data_info.get('regularMarketVolume', 'N/A'),
+            "Average Volume": stock_data_info.get('averageVolume', 'N/A'),
+            "Shares Outstanding": stock_data_info.get('sharesOutstanding', 'N/A'),
+        }
+        st.table(pd.DataFrame(list(volume_data.items()), columns=["Metric", "Value"]))
+        
+        st.write("**Dividends and Yield**")
+        dividend_data = {
+            "Dividend Rate": stock_data_info.get('dividendRate', 'N/A'),
+            "Dividend Yield": stock_data_info.get('dividendYield', 'N/A'),
+        }
+        st.table(pd.DataFrame(list(dividend_data.items()), columns=["Metric", "Value"]))
+        
+    else:
+        st.error("Stock data not available or symbol not found for the selected exchange.")
+
 # Function to display buy/sell recommendation (simple approach for demonstration)
 def recommendation(past_data, future_predictions):
     recent_avg = past_data['Close'].tail(5).mean()
@@ -135,6 +181,7 @@ elif page == "Stock Information":
                 st.write(f"**Country**: {stock_info.get('country', 'N/A')}")
                 description = stock_info.get('longBusinessSummary', 'No description available')
                 st.write(f"**Company Description**: {description}")
+                fetch_stock_info(symbol, exchange)
             except Exception as e:
                 st.error(f"Failed to fetch stock information: {str(e)}")
 
@@ -170,7 +217,6 @@ elif page == "Stock Prediction":
             #future_dates = pd.to_datetime(future_dates, origin='julian', unit='D')
             future_dates = np.clip(future_dates, a_min=1721425, a_max=2262448)  # Valid Julian dates
             future_dates = pd.to_datetime(future_dates, origin='julian', unit='D')
-
 
             st.subheader("Stock Price Predictions for Next 30 Days")
             fig, ax = plt.subplots(figsize=(10, 6))
