@@ -84,10 +84,10 @@ def predict_stock_prices(data):
 # Function to display stock information in a neat table format
 def display_stock_information(stock_data_info):
     if stock_data_info is not None:
-        st.write("### Stock Information")
+        st.write("### Stock Information (In Tabular Format)")
         
         # Display stock information in table format
-        st.write("**Basic Information (In Tabular Format)**")
+        st.write("**Basic Information**")
         basic_info = {
             "Symbol": stock_data_info.get('symbol', 'N/A'),
             "Company Name": stock_data_info.get('longName', 'N/A'),
