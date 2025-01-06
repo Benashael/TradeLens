@@ -180,7 +180,7 @@ elif page == "Stock Information":
                 st.write(f"**Volume**: {stock_info.get('volume', 'N/A')}")
                 st.write(f"**Country**: {stock_info.get('country', 'N/A')}")
                 description = stock_info.get('longBusinessSummary', 'No description available')
-                st.write(f"**Company Description**: {description}")
+                st.write(f"**Company Description (Tabular Format)**: {description}")
                 stock_info = fetch_stock_info(symbol, exchange)
                 display_stock_information(stock_info)
             except Exception as e:
