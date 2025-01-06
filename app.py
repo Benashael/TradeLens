@@ -181,16 +181,8 @@ elif page == "Stock Information":
                 st.write(f"**Country**: {stock_info.get('country', 'N/A')}")
                 description = stock_info.get('longBusinessSummary', 'No description available')
                 st.write(f"**Company Description**: {description}")
-
-                # Button to get stock information
-                if st.button("Get Stock Information"):
-                    # Fetch stock information
-                    stock_info = fetch_stock_info(symbol, exchange)
-                    
-                    if stock_info:
-                        display_stock_information(stock_info)
-                    else:
-                        st.error(f"The stock '{symbol}' is not available on {exchange}.")
+                stock_info = fetch_stock_info(symbol, exchange)
+                display_stock_information(stock_info)
             except Exception as e:
                 st.error(f"Failed to fetch stock information: {str(e)}")
 
