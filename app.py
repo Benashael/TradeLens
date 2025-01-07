@@ -307,14 +307,26 @@ elif page == "Stock Prediction":
             future_dates = pd.to_datetime(future_dates, origin='julian', unit='D')'''
             # Predictions
             future_dates = predict_stock_prices(data)
-            
-            # Ensure future_dates are within valid ordinal date range
-            valid_ordinal_min = pd.Timestamp.min.toordinal()  # Smallest valid ordinal date
-            valid_ordinal_max = pd.Timestamp.max.toordinal()  # Largest valid ordinal date
+
+            # Define valid range for Julian ordinals
+            valid_ordinal_min = 1721425  # January 1, 1 CE
+            valid_ordinal_max = 2262448  # December 31, 9999 CE
+
+            if valid_ordinal_min is None or valid_ordinal_max is None:
+                raise ValueError("Valid ordinal range is not properly defined.")
+
+            # Clip future_dates to ensure it stays within valid Julian range
             future_dates = np.clip(future_dates, a_min=valid_ordinal_min, a_max=valid_ordinal_max)
             
+            # Convert clipped Julian dates to datetime
+            future_dates = pd.to_datetime(future_dates, origin='julian', unit='D')
+            # Ensure future_dates are within valid ordinal date range
+            #valid_ordinal_min = pd.Timestamp.min.toordinal()  # Smallest valid ordinal date
+            #valid_ordinal_max = pd.Timestamp.max.toordinal()  # Largest valid ordinal date
+            #future_dates = np.clip(future_dates, a_min=valid_ordinal_min, a_max=valid_ordinal_max)
+            
             # Convert clipped ordinal dates back to datetime
-            future_dates = pd.to_datetime(future_dates, origin='unix', unit='D', errors='coerce')
+            #future_dates = pd.to_datetime(future_dates, origin='unix', unit='D', errors='coerce')
             
             # Handle any invalid conversions
             future_dates = future_dates.dropna()  # Drop rows where conversion failed (if any)
