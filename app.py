@@ -6,6 +6,10 @@ import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 from datetime import datetime
 
+# Set up Streamlit app
+st.set_page_config(page_title="TradeLens", page_icon="💰", layout="wide")
+st.title("💰 TradeLens: Gain Clarity on your Trading Decisions 💼")
+
 # Predefined stock symbols for each exchange
 stock_options = {
     "NSE": [
@@ -98,9 +102,9 @@ def predict_stock_prices(data, end_date):
     business_days_diff = pd.bdate_range(last_date, end_date).size  # Number of business days
     
     # Limit the business days to 365 if it exceeds
-    if business_days_diff > 730:
-        st.warning("The period exceeds 365 business days. Limiting to 365 business days.")
-        business_days_diff = 730
+    if business_days_diff > 365:
+        st.warning("⚠️ The period exceeds 365 business days. Limiting to 365 business days. ⏳")
+        business_days_diff = 365
 
     # Generate future dates
     future_dates = pd.date_range(start=last_date + pd.Timedelta(days=1), periods=business_days_diff, freq="B")
@@ -114,10 +118,10 @@ def predict_stock_prices(data, end_date):
 # Function to display stock information in a neat table format
 def display_stock_information(stock_data_info):
     if stock_data_info is not None:
-        st.write("### Additional Stock Information (In Tabular Format)")
-        
+        st.write("### 📊 Additional Stock Information (In Tabular Format)")
+
         # Display stock information in table format
-        st.write("**Basic Information**")
+        st.write("**📈 Basic Information**")
         basic_info = {
             "Symbol": stock_data_info.get('symbol', 'N/A'),
             "Company Name": stock_data_info.get('longName', 'N/A'),
@@ -126,7 +130,7 @@ def display_stock_information(stock_data_info):
         }
         st.table(pd.DataFrame(list(basic_info.items()), columns=["Metric", "Value"]))
         
-        st.write("**Market Data**")
+        st.write("**📉 Market Data**")
         market_data = {
             "Current Price": stock_data_info.get('currentPrice', 'N/A'),
             "Previous Close": stock_data_info.get('previousClose', 'N/A'),
@@ -138,7 +142,7 @@ def display_stock_information(stock_data_info):
         }
         st.table(pd.DataFrame(list(market_data.items()), columns=["Metric", "Value"]))
         
-        st.write("**Volume and Shares**")
+        st.write("**📊 Volume and Shares**")
         volume_data = {
             "Volume": stock_data_info.get('volume', 'N/A'),
             "Market Volume": stock_data_info.get('regularMarketVolume', 'N/A'),
@@ -147,7 +151,7 @@ def display_stock_information(stock_data_info):
         }
         st.table(pd.DataFrame(list(volume_data.items()), columns=["Metric", "Value"]))
         
-        st.write("**Dividends and Yield**")
+        st.write("**💸 Dividends and Yield**")
         dividend_data = {
             "Dividend Rate": stock_data_info.get('dividendRate', 'N/A'),
             "Dividend Yield": stock_data_info.get('dividendYield', 'N/A'),
@@ -155,7 +159,7 @@ def display_stock_information(stock_data_info):
         st.table(pd.DataFrame(list(dividend_data.items()), columns=["Metric", "Value"]))
         
     else:
-        st.error("Stock data not available or symbol not found for the selected exchange.")
+        st.error("❌ Stock data not available or symbol not found for the selected exchange.")
 
 def recommendation(past_data, future_predictions):
     # Extract the last 5 closing prices and calculate the average
@@ -168,100 +172,107 @@ def recommendation(past_data, future_predictions):
 
     # Generate the recommendation
     if predicted_avg > recent_avg:
-        recommendation_text = "Buy"
+        recommendation_text = "📈 Buy"
     elif predicted_avg < recent_avg:
-        recommendation_text = "Sell"
+        recommendation_text = "📉 Sell"
     else:
-        recommendation_text = "Hold"
+        recommendation_text = "🤷‍♂️ Hold"
 
     # Return a detailed response
     return {
         "Recommendation": recommendation_text,
-        "Recent Average Price": round(recent_avg, 2),  # Scalar value
-        "Predicted Average Price": round(predicted_avg, 2),  # Scalar value
+        "Recent Average Price": f"${round(recent_avg, 2)}",  # Scalar value
+        "Predicted Average Price": f"${round(predicted_avg, 2)}",  # Scalar value
     }
 
-page = st.sidebar.radio("Select", ["Home", "Stock Information", "Stock Prediction"])
+# Navigation Menu
+st.sidebar.title("📱 Navigation")
+page = st.sidebar.radio("**🌐 Select a Feature**", ["Home 🏠", "Stock Information 📊", "Stock Prediction 📈"])
 
 if page  == "Home":
-    # Front page title
-    st.title("TradeLens: Gain Clarity on your Trading Decisions 🚀📊")
-    
     # Display a brief description with emojis
     st.markdown("""
-    Welcome to **TradeLens**! 🎯 The ultimate platform to help you make smarter trading decisions with real-time stock predictions and analysis. Whether you're a beginner or an experienced trader, we provide powerful insights to help guide your portfolio with confidence.
-    
-    📈 **Stock Prediction**: Predict future stock prices with historical data.
-    📊 **Data Visualization**: Visualize stock trends and market movement.
-    💡 **Investment Insights**: Make informed decisions with accurate buy/sell recommendations.
-    
+    # Welcome to **TradeLens**! 🎯
+    The ultimate platform to help you make smarter trading decisions with real-time stock predictions and analysis. 
+    Whether you're a beginner or an experienced trader, we provide powerful insights to help guide your portfolio with confidence.
+
+    ## 📈 **Stock Prediction**
+    Predict future stock prices using historical data and powerful machine learning algorithms.
+
+    ## 📊 **Data Visualization**
+    Visualize stock trends, patterns, and market movement to make well-informed decisions.
+
+    ## 💡 **Investment Insights**
+    Get accurate buy/sell recommendations based on market analysis and predictions to optimize your trading strategy.
+
     Let’s get started on your journey to better trading! 😎
     """)
 
-elif page == "Stock Information":
-    st.title("Stock Information")
-    st.write("Select a stock symbol and get details about its availability and key metrics.")
+elif page == "Stock Information 📊":
+    st.header("📈 Stock Information")
+    st.write("Select a stock symbol and get details about its availability and key metrics. 📊")
 
     # Dropdown for selecting exchange
-    exchange = st.selectbox("Select Stock Exchange", list(stock_options.keys()))
+    exchange = st.selectbox("📍 Select Stock Exchange", list(stock_options.keys()))
     
     # Dropdown for selecting stock symbol
-    symbol = st.selectbox("Select Stock Symbol", stock_options[exchange])
+    symbol = st.selectbox("🔍 Select Stock Symbol", stock_options[exchange])
 
     # Button to get stock information
-    if st.button("Check Availability and Get Stock Information"):
+    if st.button("🔎 Check Availability and Get Stock Information"):
         # Check availability
         availability = check_stock_availability(symbol)
         if "Not Available" in availability:
-            st.error(f"The stock '{symbol}' is not available in any exchange.")
+            st.error(f"❌ The stock '{symbol}' is not available in any exchange.")
         else:
-            st.success(f"The stock '{symbol}' is available in: {', '.join(availability)}")
+            st.success(f"✅ The stock '{symbol}' is available in: {', '.join(availability)}")
 
             # Fetch and display stock information
             try:
                 stock_info = fetch_stock_info(symbol, exchange)
-                st.write(f"### Stock Information for {symbol} ({exchange})")
-                st.write(f"**Company Name**: {stock_info.get('longName', 'N/A')}")
-                st.write(f"**Sector**: {stock_info.get('sector', 'N/A')}")
-                st.write(f"**Industry**: {stock_info.get('industry', 'N/A')}")
-                st.write(f"**Current Price**: {stock_info.get('currentPrice', 'N/A')}")
-                st.write(f"**Market Cap**: {stock_info.get('marketCap', 'N/A')}")
-                st.write(f"**PE Ratio**: {stock_info.get('trailingPE', 'N/A')}")
-                st.write(f"**52 Week High**: {stock_info.get('fiftyTwoWeekHigh', 'N/A')}")
-                st.write(f"**52 Week Low**: {stock_info.get('fiftyTwoWeekLow', 'N/A')}")
-                st.write(f"**Beta**: {stock_info.get('beta', 'N/A')}")
-                st.write(f"**Dividend Yield**: {stock_info.get('dividendYield', 'N/A')}")
-                st.write(f"**Volume**: {stock_info.get('volume', 'N/A')}")
-                st.write(f"**Country**: {stock_info.get('country', 'N/A')}")
+                st.write(f"### 📉 Stock Information for {symbol} ({exchange})")
+                st.write(f"**🏢 Company Name**: {stock_info.get('longName', 'N/A')}")
+                st.write(f"**🌎 Sector**: {stock_info.get('sector', 'N/A')}")
+                st.write(f"**🏭 Industry**: {stock_info.get('industry', 'N/A')}")
+                st.write(f"**💵 Current Price**: {stock_info.get('currentPrice', 'N/A')}")
+                st.write(f"**💰 Market Cap**: {stock_info.get('marketCap', 'N/A')}")
+                st.write(f"**📉 PE Ratio**: {stock_info.get('trailingPE', 'N/A')}")
+                st.write(f"**📅 52 Week High**: {stock_info.get('fiftyTwoWeekHigh', 'N/A')}")
+                st.write(f"**📅 52 Week Low**: {stock_info.get('fiftyTwoWeekLow', 'N/A')}")
+                st.write(f"**⚖️ Beta**: {stock_info.get('beta', 'N/A')}")
+                st.write(f"**💸 Dividend Yield**: {stock_info.get('dividendYield', 'N/A')}")
+                st.write(f"**🔊 Volume**: {stock_info.get('volume', 'N/A')}")
+                st.write(f"**🌍 Country**: {stock_info.get('country', 'N/A')}")
                 description = stock_info.get('longBusinessSummary', 'No description available')
-                st.write(f"**Company Description**: {description}")
+                st.write(f"**📝 Company Description**: {description}")
                 stock_info = fetch_stock_info(symbol, exchange)
                 display_stock_information(stock_info)
             except Exception as e:
-                st.error(f"Failed to fetch stock information: {str(e)}")
+                st.error(f"❌ Failed to fetch stock information: {str(e)}")
 
-elif page == "Stock Prediction":
-    st.title("Stock Prediction and Analysis")
 
-   # Dropdown for selecting exchange
-    exchange = st.selectbox("Select Stock Exchange", list(stock_options.keys()))
+elif page == "Stock Prediction 📈":
+    st.header("📉 Stock Prediction and Analysis 📊")
+
+    # Dropdown for selecting exchange
+    exchange = st.selectbox("📍 Select Stock Exchange", list(stock_options.keys()))
     
     # Dropdown for selecting stock symbol
-    company = st.selectbox("Select Stock Symbol", stock_options[exchange])
+    company = st.selectbox("🔍 Select Stock Symbol", stock_options[exchange])
 
     # Date inputs for historical data
-    start_date = st.date_input("Start Date", datetime(2020, 1, 1))
-    end_date = st.date_input("End Date", datetime.today())
+    start_date = st.date_input("📅 Start Date", datetime(2020, 1, 1))
+    end_date = st.date_input("📅 End Date", datetime.today())
 
-    if st.button("Get Stock Data"):
+    if st.button("🔎 Get Stock Data"):
         data = fetch_stock_data(exchange, company, start_date, end_date)
         if data.empty:
-            st.error("No data found for the selected stock.")
+            st.error("❌ No data found for the selected stock.")
         else:
             st.write(data.tail())
 
             # Plotting the stock's price data (Open, High, Low, Close)
-            st.subheader("Stock Prices Over Time")
+            st.subheader("📈 Stock Prices Over Time")
             fig, ax = plt.subplots(figsize=(10, 6))
             
             # Plotting each price type with a unique color and label
@@ -280,7 +291,7 @@ elif page == "Stock Prediction":
             st.pyplot(fig)
 
             # Plotting the stock's Open Price
-            st.subheader("Open Price Over Time")
+            st.subheader("📊 Open Price Over Time")
             fig_open, ax_open = plt.subplots(figsize=(10, 6))
             ax_open.plot(data.index, data['Open'], label="Open Price", color="blue")
             ax_open.set_xlabel("Date")
@@ -290,7 +301,7 @@ elif page == "Stock Prediction":
             st.pyplot(fig_open)
             
             # Plotting the stock's High Price
-            st.subheader("High Price Over Time")
+            st.subheader("📈 High Price Over Time")
             fig_high, ax_high = plt.subplots(figsize=(10, 6))
             ax_high.plot(data.index, data['High'], label="High Price", color="green")
             ax_high.set_xlabel("Date")
@@ -300,7 +311,7 @@ elif page == "Stock Prediction":
             st.pyplot(fig_high)
             
             # Plotting the stock's Low Price
-            st.subheader("Low Price Over Time")
+            st.subheader("📉 Low Price Over Time")
             fig_low, ax_low = plt.subplots(figsize=(10, 6))
             ax_low.plot(data.index, data['Low'], label="Low Price", color="red")
             ax_low.set_xlabel("Date")
@@ -310,7 +321,7 @@ elif page == "Stock Prediction":
             st.pyplot(fig_low)
             
             # Plotting the stock's Close Price
-            st.subheader("Close Price Over Time")
+            st.subheader("📊 Close Price Over Time")
             fig_close, ax_close = plt.subplots(figsize=(10, 6))
             ax_close.plot(data.index, data['Close'], label="Close Price", color="orange")
             ax_close.set_xlabel("Date")
@@ -322,8 +333,17 @@ elif page == "Stock Prediction":
             # Predictions
             future_dates, future_predictions = predict_stock_prices(data, end_date)
             
+            # Display predicted prices
+            st.subheader("🔮 Future Predicted Prices")
+            # Flatten the predictions array
+            predictions_df = pd.DataFrame({
+                "Date": future_dates, 
+                "Predicted Price": future_predictions.flatten()
+            })
+            st.write(predictions_df)
+            
             # Plot the original closing prices and the predicted future prices
-            st.subheader(f"Stock Price Prediction for {company}")
+            st.subheader(f"📉 Stock Price Prediction for {company}")
             fig, ax = plt.subplots(figsize=(10, 6))
             
             # Plot historical data
@@ -340,21 +360,13 @@ elif page == "Stock Prediction":
             
             # Display the plot
             st.pyplot(fig)
-            
-            # Display predicted prices
-            st.subheader("Future Predicted Prices")
-            # Flatten the predictions array
-            predictions_df = pd.DataFrame({
-                "Date": future_dates, 
-                "Predicted Price": future_predictions.flatten()
-            })
-            st.write(predictions_df)
 
             # Get recommendation based on past data and predictions
             recommendation_result = recommendation(data, future_predictions)
             
             # Display the recommendation and details
-            st.subheader("Investment Recommendation")
-            st.write(f"Recommendation: {recommendation_result['Recommendation']}")
-            st.write(f"Recent Average Closing Price: ${recommendation_result['Recent Average Price']}")
-            st.write(f"Predicted Average Closing Price: ${recommendation_result['Predicted Average Price']}")
+            st.subheader("📈 Investment Recommendation")
+            st.write(f"**Recommendation**: {recommendation_result['Recommendation']}")
+            st.write(f"**Recent Average Closing Price**: ${recommendation_result['Recent Average Price']}")
+            st.write(f"**Predicted Average Closing Price**: ${recommendation_result['Predicted Average Price']}")
+
