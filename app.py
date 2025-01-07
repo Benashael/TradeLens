@@ -144,27 +144,28 @@ def display_stock_information(stock_data_info):
         st.error("Stock data not available or symbol not found for the selected exchange.")
 
 # Function to display buy/sell recommendation (enhanced for clarity)
-# Function to display buy/sell recommendation (fixed for Series ambiguity)
 def recommendation(past_data, future_predictions):
-    # Calculate the average of the recent closing prices (last 5 days)
-    recent_avg = past_data['Close'].tail(5).mean()
-    
-    # Calculate the average of the predicted future prices
-    predicted_avg = np.mean(future_predictions.flatten())  # Ensure a scalar value
-    
-    # Generate a recommendation based on the comparison of averages
+    # Extract the last 5 closing prices and calculate the average
+    recent_closing_prices = past_data['Close'].tail(5).values
+    recent_avg = sum(recent_closing_prices) / len(recent_closing_prices)  # Scalar value
+
+    # Flatten future_predictions and calculate its average
+    future_predictions_flat = future_predictions.flatten()  # Ensures a 1D array
+    predicted_avg = sum(future_predictions_flat) / len(future_predictions_flat)  # Scalar value
+
+    # Generate the recommendation
     if predicted_avg > recent_avg:
         recommendation_text = "Buy"
     elif predicted_avg < recent_avg:
         recommendation_text = "Sell"
     else:
         recommendation_text = "Hold"
-    
-    # Return a detailed output with averages and recommendation
+
+    # Return a detailed response
     return {
         "Recommendation": recommendation_text,
-        "Recent Average Price": round(float(recent_avg), 2),  # Convert to scalar
-        "Predicted Average Price": round(float(predicted_avg), 2),  # Convert to scalar
+        "Recent Average Price": round(recent_avg, 2),  # Keep scalar value
+        "Predicted Average Price": round(predicted_avg, 2),  # Keep scalar value
     }
 
 page = st.sidebar.radio("Select", ["Home", "Stock Information", "Stock Prediction"])
