@@ -189,7 +189,7 @@ def recommendation(past_data, future_predictions):
 st.sidebar.title("📱 Navigation")
 page = st.sidebar.radio("**🌐 Select a Feature**", ["Home 🏠", "Stock Information 📊", "Stock Prediction 📈"])
 
-if page  == "Home":
+if page  == "Home 🏠":
     # Display a brief description with emojis
     st.header("Welcome to **TradeLens**! 🎯")
     st.markdown("""
