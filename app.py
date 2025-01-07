@@ -84,9 +84,9 @@ def predict_stock_prices(data, end_date):
     business_days_diff = pd.bdate_range(last_date, end_date).size  # Number of business days
     
     # Limit the business days to 365 if it exceeds
-    if business_days_diff > 365:
+    if business_days_diff > 730:
         st.warning("The period exceeds 365 business days. Limiting to 365 business days.")
-        business_days_diff = 365
+        business_days_diff = 730
 
     # Generate future dates
     future_dates = pd.date_range(start=last_date + pd.Timedelta(days=1), periods=business_days_diff, freq="B")
