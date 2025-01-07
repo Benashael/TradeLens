@@ -259,13 +259,54 @@ elif page == "Stock Prediction":
             # Display the plot
             st.pyplot(fig)
 
+            # Plotting the stock's Open Price
+            st.subheader("Open Price Over Time")
+            fig_open, ax_open = plt.subplots(figsize=(10, 6))
+            ax_open.plot(data.index, data['Open'], label="Open Price", color="blue")
+            ax_open.set_xlabel("Date")
+            ax_open.set_ylabel("Price")
+            ax_open.set_title(f"{company} Open Price Over Time")
+            ax_open.legend(loc="upper left")
+            st.pyplot(fig_open)
+            
+            # Plotting the stock's High Price
+            st.subheader("High Price Over Time")
+            fig_high, ax_high = plt.subplots(figsize=(10, 6))
+            ax_high.plot(data.index, data['High'], label="High Price", color="green")
+            ax_high.set_xlabel("Date")
+            ax_high.set_ylabel("Price")
+            ax_high.set_title(f"{company} High Price Over Time")
+            ax_high.legend(loc="upper left")
+            st.pyplot(fig_high)
+            
+            # Plotting the stock's Low Price
+            st.subheader("Low Price Over Time")
+            fig_low, ax_low = plt.subplots(figsize=(10, 6))
+            ax_low.plot(data.index, data['Low'], label="Low Price", color="red")
+            ax_low.set_xlabel("Date")
+            ax_low.set_ylabel("Price")
+            ax_low.set_title(f"{company} Low Price Over Time")
+            ax_low.legend(loc="upper left")
+            st.pyplot(fig_low)
+            
+            # Plotting the stock's Close Price
+            st.subheader("Close Price Over Time")
+            fig_close, ax_close = plt.subplots(figsize=(10, 6))
+            ax_close.plot(data.index, data['Close'], label="Close Price", color="orange")
+            ax_close.set_xlabel("Date")
+            ax_close.set_ylabel("Price")
+            ax_close.set_title(f"{company} Close Price Over Time")
+            ax_close.legend(loc="upper left")
+            st.pyplot(fig_close)
+
+
             # Predictions
             '''future_dates, future_predictions = predict_stock_prices(data)
             #future_dates = pd.to_datetime(future_dates, origin='julian', unit='D')
             future_dates = np.clip(future_dates, a_min=1721425, a_max=2262448)  # Valid Julian dates
             future_dates = pd.to_datetime(future_dates, origin='julian', unit='D')'''
             # Predictions
-            future_dates, future_predictions = predict_stock_prices(data)
+            future_dates = predict_stock_prices(data)
             
             # Ensure future_dates are within valid ordinal date range
             valid_ordinal_min = pd.Timestamp.min.toordinal()  # Smallest valid ordinal date
