@@ -66,7 +66,7 @@ def fetch_stock_data(exchange, symbol, start_date, end_date):
     return stock_data
 
 # Function for stock price prediction (using simple Linear Regression for demo)
-def predict_stock_prices(data):
+'''def predict_stock_prices(data):
     data['Date'] = pd.to_datetime(data.index)
     data['Date'] = data['Date'].map(pd.Timestamp.toordinal)
 
@@ -79,12 +79,48 @@ def predict_stock_prices(data):
     future_dates = pd.date_range(data.index[-1], periods=30).map(pd.Timestamp.toordinal).values.reshape(-1, 1)
     future_predictions = model.predict(future_dates)
 
-    return future_dates, future_predictions
+    return future_dates, future_predictions'''
+from sklearn.linear_model import LinearRegression
+import pandas as pd
+import numpy as np
+
+# Function for stock price prediction
+def predict_stock_prices(data):
+    try:
+        # Ensure index is in datetime format
+        data.index = pd.to_datetime(data.index)
+        data['DateOrdinal'] = data.index.map(pd.Timestamp.toordinal)
+
+        # Prepare features and labels
+        X = data['DateOrdinal'].values.reshape(-1, 1)
+        y = data['Close'].values
+
+        # Train the Linear Regression model
+        model = LinearRegression()
+        model.fit(X, y)
+
+        # Generate future dates (limit to valid range)
+        last_date = data.index[-1]
+        future_dates = pd.date_range(start=last_date, periods=30, freq='D')
+        future_date_ordinals = future_dates.map(pd.Timestamp.toordinal).values.reshape(-1, 1)
+
+        # Predict future stock prices
+        future_predictions = model.predict(future_date_ordinals)
+
+        # Return results as a DataFrame for easy integration
+        prediction_df = pd.DataFrame({
+            "Date": future_dates,
+            "Predicted_Close": future_predictions
+        })
+        return prediction_df
+    except Exception as e:
+        print(f"Error in prediction: {str(e)}")
+        return None
 
 # Function to display stock information in a neat table format
 def display_stock_information(stock_data_info):
     if stock_data_info is not None:
-        st.write("### Stock Information (In Tabular Format)")
+        st.write("### Additional Stock Information (In Tabular Format)")
         
         # Display stock information in table format
         st.write("**Basic Information**")
@@ -214,10 +250,24 @@ elif page == "Stock Prediction":
             st.pyplot(fig)
 
             # Predictions
-            future_dates, future_predictions = predict_stock_prices(data)
+            '''future_dates, future_predictions = predict_stock_prices(data)
             #future_dates = pd.to_datetime(future_dates, origin='julian', unit='D')
             future_dates = np.clip(future_dates, a_min=1721425, a_max=2262448)  # Valid Julian dates
-            future_dates = pd.to_datetime(future_dates, origin='julian', unit='D')
+            future_dates = pd.to_datetime(future_dates, origin='julian', unit='D')'''
+            # Predictions
+            future_dates, future_predictions = predict_stock_prices(data)
+            
+            # Ensure future_dates are within valid ordinal date range
+            valid_ordinal_min = pd.Timestamp.min.toordinal()  # Smallest valid ordinal date
+            valid_ordinal_max = pd.Timestamp.max.toordinal()  # Largest valid ordinal date
+            future_dates = np.clip(future_dates, a_min=valid_ordinal_min, a_max=valid_ordinal_max)
+            
+            # Convert clipped ordinal dates back to datetime
+            future_dates = pd.to_datetime(future_dates, origin='unix', unit='D', errors='coerce')
+            
+            # Handle any invalid conversions
+            future_dates = future_dates.dropna()  # Drop rows where conversion failed (if any)
+
 
             st.subheader("Stock Price Predictions for Next 30 Days")
             fig, ax = plt.subplots(figsize=(10, 6))
