@@ -295,7 +295,11 @@ elif page == "Stock Prediction":
             
             # Display predicted prices
             st.subheader("Future Predicted Prices")
-            predictions_df = pd.DataFrame({"Date": future_dates, "Predicted Price": future_predictions})
+            # Flatten the predictions array
+            predictions_df = pd.DataFrame({
+                "Date": future_dates, 
+                "Predicted Price": future_predictions.flatten()
+            })
             st.write(predictions_df)
 
             # Display recommendation
