@@ -324,4 +324,4 @@ elif page == "Stock Prediction":
             st.write(predictions_df)
 
             # Display recommendation
-            action = recommendation(past_data, future_predictions)
+            action = recommendation(data, future_predictions)
