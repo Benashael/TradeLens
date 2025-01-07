@@ -205,9 +205,11 @@ elif page == "Stock Information":
 elif page == "Stock Prediction":
     st.title("Stock Prediction and Analysis")
 
-    # Dropdowns for selecting stock exchange and company
-    exchange = st.selectbox("Select Stock Exchange", ["NSE", "BSE", "LSE", "NYSE", "NASDAQ"])
-    company = st.text_input("Enter Stock Symbol", "AAPL")
+   # Dropdown for selecting exchange
+    exchange = st.selectbox("Select Stock Exchange", list(stock_options.keys()))
+    
+    # Dropdown for selecting stock symbol
+    company = st.selectbox("Select Stock Symbol", stock_options[exchange])
 
     # Date inputs for historical data
     start_date = st.date_input("Start Date", datetime(2020, 1, 1))
