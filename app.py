@@ -240,13 +240,23 @@ elif page == "Stock Prediction":
         else:
             st.write(data.tail())
 
-            # Plotting the stock's closing prices
-            st.subheader("Stock Price Over Time")
+            # Plotting the stock's price data (Open, High, Low, Close)
+            st.subheader("Stock Prices Over Time")
             fig, ax = plt.subplots(figsize=(10, 6))
-            ax.plot(data.index, data['Close'], label="Close Price")
+            
+            # Plotting each price type with a unique color and label
+            ax.plot(data.index, data['Open'], label="Open Price", color="blue")
+            ax.plot(data.index, data['High'], label="High Price", color="green")
+            ax.plot(data.index, data['Low'], label="Low Price", color="red")
+            ax.plot(data.index, data['Close'], label="Close Price", color="orange")
+            
+            # Adding labels, title, and legend
             ax.set_xlabel("Date")
             ax.set_ylabel("Price")
-            ax.set_title(f"{company} Stock Price Over Time")
+            ax.set_title(f"{company} Stock Prices Over Time")
+            ax.legend(loc="upper left")  # Position of legend
+            
+            # Display the plot
             st.pyplot(fig)
 
             # Predictions
