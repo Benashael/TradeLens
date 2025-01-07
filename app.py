@@ -80,8 +80,11 @@ def predict_stock_prices(data):
     model.fit(X, y)
 
     # Generate future dates based on the dataset's latest date
-    last_date = pd.to_datetime(data.index[-1])  # Last date in the dataset
-    future_dates = pd.date_range(last_date, periods=30, freq="B")  # 30 future business days
+   # last_date = pd.to_datetime(data.index[-1])  # Last date in the dataset
+    #future_dates = pd.date_range(last_date, periods=30, freq="B")  # 30 future business days
+    #future_dates_ordinal = future_dates.map(pd.Timestamp.toordinal).values.reshape(-1, 1)
+    last_date = pd.to_datetime(data.index[-1])
+    future_dates = pd.date_range(start=last_date + pd.Timedelta(days=1), periods=30, freq="B")
     future_dates_ordinal = future_dates.map(pd.Timestamp.toordinal).values.reshape(-1, 1)
 
     # Predict future prices
