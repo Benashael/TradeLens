@@ -9,27 +9,41 @@ from datetime import datetime
 # Predefined stock symbols for each exchange
 stock_options = {
     "NSE": [
-        "RELIANCE", "TCS", "INFY", "HDFCBANK", "ITC", "HINDUNILVR", "ICICIBANK", "SBIN", 
-        "KOTAKBANK", "BAJFINANCE", "BHARTIARTL", "ADANIENT", "AXISBANK", "LT", "MARUTI", 
-        "SUNPHARMA", "TITAN", "WIPRO", "ULTRACEMCO", "ASIANPAINT"
+        "RELIANCE.NS", "TCS.NS", "INFY.NS", "HDFCBANK.NS", "HINDUNILVR.NS", "ICICIBANK.NS", "ITC.NS", "SBIN.NS", 
+        "BAJFINANCE.NS", "BHARTIARTL.NS", "AXISBANK.NS", "KOTAKBANK.NS", "LARSEN.NS", "MARUTI.NS", "M&M.NS", 
+        "WIPRO.NS", "HCLTECH.NS", "ULTRACEMCO.NS", "NTPC.NS", "ONGC.NS", "TATAMOTORS.NS", "ASIANPAINT.NS", 
+        "SUNPHARMA.NS", "DRREDDY.NS", "TECHM.NS", "DIVISLAB.NS", "ADANIGREEN.NS", "ADANIPORTS.NS", "CIPLA.NS", 
+        "HAVELLS.NS", "INDUSINDBK.NS", "BAJAJ-AUTO.NS", "EICHERMOT.NS", "UPL.NS", "GRASIM.NS", "POWERGRID.NS", 
+        "MUTHOOTFIN.NS", "BPCL.NS", "VEDL.NS", "ZEE.NS", "TATACONSUM.NS", "GAIL.NS", "RELIANCEPOWER.NS", "IOC.NS", 
+        "M&MFIN.NS", "ADANIPOWER.NS", "HDFCLIFE.NS", "LUPIN.NS", "SBILIFE.NS", "JSWSTEEL.NS"
     ],
     "BSE": [
-        "500325", "532540", "500112", "500180", "532898", "500875", "500209", "500124", 
-        "532500", "532215", "532648", "500510", "500300", "500440", "500010", "500410", 
-        "500520", "500295", "500182", "500696"
-    ],
-    "NYSE": [
-        "AAPL", "MSFT", "GOOGL", "AMZN", "BRK-B", "JNJ", "NVDA", "XOM", "PG", "JPM", 
-        "V", "UNH", "TSLA", "MA", "HD", "CVX", "PFE", "KO", "ABBV", "LLY"
-    ],
-    "NASDAQ": [
-        "TSLA", "NVDA", "FB", "INTC", "AMZN", "GOOGL", "AAPL", "MSFT", "ADBE", "CMCSA", 
-        "CSCO", "PEP", "PYPL", "NFLX", "COST", "TXN", "INTU", "QCOM", "AMGN", "MRNA"
+        "500325.BO", "532540.BO", "500180.BO", "532174.BO", "500570.BO", "532641.BO", "532455.BO", "532155.BO", 
+        "500010.BO", "532855.BO", "500209.BO", "500114.BO", "500470.BO", "500134.BO", "500827.BO", "532939.BO", 
+        "533020.BO", "500104.BO", "500413.BO", "500408.BO", "500244.BO", "500312.BO", "500164.BO", "532634.BO", 
+        "500376.BO", "532610.BO", "533287.BO", "500147.BO", "500692.BO", "532898.BO", "500124.BO", "500185.BO", 
+        "500840.BO", "532179.BO", "500109.BO", "532780.BO", "500828.BO", "533091.BO", "532761.BO", "532832.BO", 
+        "500181.BO", "532215.BO", "532374.BO", "500182.BO", "500260.BO", "500209.BO", "532540.BO", "500301.BO", 
+        "532555.BO", "532674.BO"
     ],
     "LSE": [
-        "VOD.L", "HSBA.L", "RDSB.L", "BP.L", "GLEN.L", "AZN.L", "ULVR.L", "RIO.L", 
-        "BARC.L", "DGE.L", "BATS.L", "PRU.L", "SHEL.L", "TSCO.L", "LLOY.L", "REL.L", 
-        "RR.L", "NG.L", "AAL.L", "STAN.L"
+        "HSBA.L", "VOD.L", "BP.L", "GLEN.L", "AZN.L", "TSCO.L", "GSK.L", "BHP.L", "RDSB.L", "SHEL.L", "LLOY.L", 
+        "RMG.L", "BARC.L", "RR.L", "IMB.L", "SGRO.L", "DLG.L", "EXPN.L", "IWG.L", "RTO.L", "PSON.L", "STAN.L", 
+        "III.L", "WPP.L", "DGE.L", "ULVR.L", "CNA.L", "LSEG.L", "SSE.L", "VOD.L", "CLLN.L", "RBS.L", "DPLM.L", 
+        "BA.L", "MCRO.L", "SHB.L", "NXT.L", "LGEN.L", "MNG.L", "FOG.L", "FRES.L", "WEIR.L", "NDX.L", "VKG.L", 
+        "RHP.L", "ABF.L", "SN.L", "YULE.L", "ARM.L", "HL.L", "BA.L", "MNDI.L", "DNO.L"
+    ],
+    "NYSE": [
+        "MSFT", "AAPL", "GOOGL", "AMZN", "TSLA", "FB", "NFLX", "NVDA", "INTC", "BA", "DIS", "V", "JNJ", "PG", 
+        "MA", "PYPL", "CSCO", "XOM", "WMT", "COST", "ORCL", "UPS", "IBM", "ADBE", "SPGI", "CVX", "PEP", "MCD", 
+        "T", "NVDA", "UNH", "GE", "INTU", "KO", "MS", "MMM", "LMT", "GS", "ABT", "CAT", "LOW", "AMD", "QCOM", 
+        "AXP", "HD", "USB", "SYF", "MELI", "RTX", "REGN", "AMGN", "TMO", "ISRG"
+    ],
+    "NASDAQ": [
+        "AAPL", "GOOGL", "AMZN", "TSLA", "NFLX", "NVDA", "META", "MSFT", "INTC", "AMD", "PYPL", "CSCO", "WMT", 
+        "INTU", "ADBE", "MU", "NFLX", "ZM", "LULU", "SNAP", "BIDU", "REGN", "ISRG", "QCOM", "AMAT", "NXPI", 
+        "INTU", "GSX", "GILD", "VRTX", "PEP", "CVX", "BA", "NKE", "SBUX", "ISRG", "EBAY", "BABA", "SHOP", "ATVI", 
+        "AAL", "ZM", "AMAT", "TWTR", "VRSK", "MAR", "PYPL", "MU", "JBL", "MRNA", "EBAY", "EXPE", "ALGN"
     ]
 }
 
