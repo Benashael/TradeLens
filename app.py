@@ -143,17 +143,28 @@ def display_stock_information(stock_data_info):
     else:
         st.error("Stock data not available or symbol not found for the selected exchange.")
 
-# Function to display buy/sell recommendation (simple approach for demonstration)
+# Function to display buy/sell recommendation (enhanced for clarity)
 def recommendation(past_data, future_predictions):
+    # Calculate the average of the recent closing prices (last 5 days)
     recent_avg = past_data['Close'].tail(5).mean()
+    
+    # Calculate the average of the predicted future prices
     predicted_avg = np.mean(future_predictions)
-
+    
+    # Generate a recommendation based on the comparison of averages
     if predicted_avg > recent_avg:
-        return "Buy"
+        recommendation_text = "Buy"
     elif predicted_avg < recent_avg:
-        return "Sell"
+        recommendation_text = "Sell"
     else:
-        return "Hold"
+        recommendation_text = "Hold"
+    
+    # Return a detailed output with averages and recommendation
+    return {
+        "Recommendation": recommendation_text,
+        "Recent Average Price": round(recent_avg, 2),
+        "Predicted Average Price": round(predicted_avg, 2),
+    }
 
 page = st.sidebar.radio("Select", ["Home", "Stock Information", "Stock Prediction"])
 
@@ -314,4 +325,3 @@ elif page == "Stock Prediction":
 
             # Display recommendation
             action = recommendation(data, future_predictions)
-            st.write(f"Recommendation: {action}")
