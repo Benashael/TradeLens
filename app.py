@@ -66,7 +66,7 @@ def fetch_stock_data(exchange, symbol, start_date, end_date):
     return stock_data
     
 # Function for stock price prediction (Linear Regression for demonstration)
-def predict_stock_prices(data):
+def predict_stock_prices(data, end_date):
     # Ensure the index is a datetime object
     data['Date'] = pd.to_datetime(data.index)
     data['Date'] = data['Date'].map(pd.Timestamp.toordinal)
@@ -79,12 +79,17 @@ def predict_stock_prices(data):
     model = LinearRegression()
     model.fit(X, y)
 
-    # Generate future dates based on the dataset's latest date
-   # last_date = pd.to_datetime(data.index[-1])  # Last date in the dataset
-    #future_dates = pd.date_range(last_date, periods=30, freq="B")  # 30 future business days
-    #future_dates_ordinal = future_dates.map(pd.Timestamp.toordinal).values.reshape(-1, 1)
-    last_date = pd.to_datetime(data.index[-1])
-    future_dates = pd.date_range(start=last_date + pd.Timedelta(days=1), periods=30, freq="B")
+    # Generate future dates dynamically based on end_date
+    last_date = pd.to_datetime(data.index[-1])  # Last date in the dataset
+    business_days_diff = pd.bdate_range(last_date, end_date).size  # Number of business days
+    
+    # Limit the business days to 365 if it exceeds
+    if business_days_diff > 365:
+        st.warning("The period exceeds 365 business days. Limiting to 365 business days.")
+        business_days_diff = 365
+
+    # Generate future dates
+    future_dates = pd.date_range(start=last_date + pd.Timedelta(days=1), periods=business_days_diff, freq="B")
     future_dates_ordinal = future_dates.map(pd.Timestamp.toordinal).values.reshape(-1, 1)
 
     # Predict future prices
@@ -275,7 +280,7 @@ elif page == "Stock Prediction":
             st.pyplot(fig_close)
 
             # Predictions
-            future_dates, future_predictions = predict_stock_prices(data)
+            future_dates, future_predictions = predict_stock_prices(data, end_date)
             
             # Plot the original closing prices and the predicted future prices
             st.subheader(f"Stock Price Prediction for {company}")
