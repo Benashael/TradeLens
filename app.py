@@ -80,42 +80,30 @@ def fetch_stock_data(exchange, symbol, start_date, end_date):
     future_predictions = model.predict(future_dates)
 
     return future_dates, future_predictions'''
-from sklearn.linear_model import LinearRegression
-import pandas as pd
-import numpy as np
 
-# Function for stock price prediction
+# Function for stock price prediction (Linear Regression for demonstration)
 def predict_stock_prices(data):
-    try:
-        # Ensure index is in datetime format
-        data.index = pd.to_datetime(data.index)
-        data['DateOrdinal'] = data.index.map(pd.Timestamp.toordinal)
+    # Ensure the index is a datetime object
+    data['Date'] = pd.to_datetime(data.index)
+    data['Date'] = data['Date'].map(pd.Timestamp.toordinal)
 
-        # Prepare features and labels
-        X = data['DateOrdinal'].values.reshape(-1, 1)
-        y = data['Close'].values
+    # Prepare data for training
+    X = data['Date'].values.reshape(-1, 1)
+    y = data['Close'].values
 
-        # Train the Linear Regression model
-        model = LinearRegression()
-        model.fit(X, y)
+    # Train the Linear Regression model
+    model = LinearRegression()
+    model.fit(X, y)
 
-        # Generate future dates (limit to valid range)
-        last_date = data.index[-1]
-        future_dates = pd.date_range(start=last_date, periods=30, freq='D')
-        future_date_ordinals = future_dates.map(pd.Timestamp.toordinal).values.reshape(-1, 1)
+    # Generate future dates based on the dataset's latest date
+    last_date = pd.to_datetime(data.index[-1])  # Last date in the dataset
+    future_dates = pd.date_range(last_date, periods=30, freq="B")  # 30 future business days
+    future_dates_ordinal = future_dates.map(pd.Timestamp.toordinal).values.reshape(-1, 1)
 
-        # Predict future stock prices
-        future_predictions = model.predict(future_date_ordinals)
+    # Predict future prices
+    future_predictions = model.predict(future_dates_ordinal)
 
-        # Return results as a DataFrame for easy integration
-        prediction_df = pd.DataFrame({
-            "Date": future_dates,
-            "Predicted_Close": future_predictions
-        })
-        return prediction_df
-    except Exception as e:
-        print(f"Error in prediction: {str(e)}")
-        return None
+    return future_dates, future_predictions
 
 # Function to display stock information in a neat table format
 def display_stock_information(stock_data_info):
@@ -329,7 +317,7 @@ elif page == "Stock Prediction":
             #future_dates = pd.to_datetime(future_dates, origin='unix', unit='D', errors='coerce')
             
             # Handle any invalid conversions
-            future_dates = future_dates.dropna()  # Drop rows where conversion failed (if any)
+            '''future_dates = future_dates.dropna()  # Drop rows where conversion failed (if any)
 
 
             st.subheader("Stock Price Predictions for Next 30 Days")
@@ -339,7 +327,34 @@ elif page == "Stock Prediction":
             ax.set_xlabel("Date")
             ax.set_ylabel("Price")
             ax.set_title(f"{company} Future Price Prediction")
+            st.pyplot(fig)'''
+            # Predictions
+            future_dates, future_predictions = predict_stock_prices(data)
+            
+            # Plot the original closing prices and the predicted future prices
+            st.subheader(f"Stock Price Prediction for {company}")
+            fig, ax = plt.subplots(figsize=(10, 6))
+            
+            # Plot historical data
+            ax.plot(data.index, data['Close'], label="Historical Close Price", color="blue")
+            
+            # Plot future predictions
+            ax.plot(future_dates, future_predictions, label="Predicted Price", color="orange", linestyle="--")
+            
+            # Configure plot
+            ax.set_xlabel("Date")
+            ax.set_ylabel("Price")
+            ax.set_title(f"{company} Stock Price Prediction")
+            ax.legend()
+            
+            # Display the plot
             st.pyplot(fig)
+            
+            # Display predicted prices
+            st.subheader("Future Predicted Prices")
+            predictions_df = pd.DataFrame({"Date": future_dates, "Predicted Price": future_predictions})
+            st.write(predictions_df)
+
 
             # Display recommendation
             action = recommendation(data, future_predictions)
