@@ -191,22 +191,22 @@ page = st.sidebar.radio("**🌐 Select a Feature**", ["Home 🏠", "Stock Inform
 
 if page  == "Home 🏠":
     # Display a brief description with emojis
-    st.header("Welcome to **TradeLens**! 🎯")
     st.markdown("""
-        The ultimate platform to help you make smarter trading decisions with real-time stock predictions and analysis. 
-        Whether you're a beginner or an experienced trader, we provide powerful insights to help guide your portfolio with confidence.
-    
-        ## 📈 **Stock Prediction**
-        Predict future stock prices using historical data and powerful machine learning algorithms.
-    
-        ## 📊 **Data Visualization**
-        Visualize stock trends, patterns, and market movement to make well-informed decisions.
-    
-        ## 💡 **Investment Insights**
-        Get accurate buy/sell recommendations based on market analysis and predictions to optimize your trading strategy.
-    
-        Let’s get started on your journey to better trading! 😎
-        """)
+    # **Welcome to TradeLens**! 🎯
+    The ultimate platform to help you make smarter trading decisions with real-time stock predictions and analysis. 
+    Whether you're a beginner or an experienced trader, we provide powerful insights to help guide your portfolio with confidence.
+
+    ## 📈 **Stock Prediction**
+    Predict future stock prices using historical data and powerful machine learning algorithms.
+
+    ## 📊 **Data Visualization**
+    Visualize stock trends, patterns, and market movement to make well-informed decisions.
+
+    ## 💡 **Investment Insights**
+    Get accurate buy/sell recommendations based on market analysis and predictions to optimize your trading strategy.
+
+    Let’s get started on your journey to better trading! 😎
+    """)
 
 elif page == "Stock Information 📊":
     st.header("📈 Stock Information")
