@@ -184,7 +184,19 @@ def recommendation(past_data, future_predictions):
 page = st.sidebar.radio("Select", ["Home", "Stock Information", "Stock Prediction"])
 
 if page  == "Home":
-    st.title("")
+    # Front page title
+    st.title("TradeLens: Gain Clarity on your Trading Decisions 🚀📊")
+    
+    # Display a brief description with emojis
+    st.markdown("""
+    Welcome to **TradeLens**! 🎯 The ultimate platform to help you make smarter trading decisions with real-time stock predictions and analysis. Whether you're a beginner or an experienced trader, we provide powerful insights to help guide your portfolio with confidence.
+    
+    📈 **Stock Prediction**: Predict future stock prices with historical data.
+    📊 **Data Visualization**: Visualize stock trends and market movement.
+    💡 **Investment Insights**: Make informed decisions with accurate buy/sell recommendations.
+    
+    Let’s get started on your journey to better trading! 😎
+    """)
 
 elif page == "Stock Information":
     st.title("Stock Information")
