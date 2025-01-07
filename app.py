@@ -144,12 +144,13 @@ def display_stock_information(stock_data_info):
         st.error("Stock data not available or symbol not found for the selected exchange.")
 
 # Function to display buy/sell recommendation (enhanced for clarity)
+# Function to display buy/sell recommendation (fixed for Series ambiguity)
 def recommendation(past_data, future_predictions):
     # Calculate the average of the recent closing prices (last 5 days)
     recent_avg = past_data['Close'].tail(5).mean()
     
     # Calculate the average of the predicted future prices
-    predicted_avg = np.mean(future_predictions)
+    predicted_avg = np.mean(future_predictions.flatten())  # Ensure a scalar value
     
     # Generate a recommendation based on the comparison of averages
     if predicted_avg > recent_avg:
@@ -162,8 +163,8 @@ def recommendation(past_data, future_predictions):
     # Return a detailed output with averages and recommendation
     return {
         "Recommendation": recommendation_text,
-        "Recent Average Price": round(recent_avg, 2),
-        "Predicted Average Price": round(predicted_avg, 2),
+        "Recent Average Price": round(float(recent_avg), 2),  # Convert to scalar
+        "Predicted Average Price": round(float(predicted_avg), 2),  # Convert to scalar
     }
 
 page = st.sidebar.radio("Select", ["Home", "Stock Information", "Stock Prediction"])
@@ -323,5 +324,11 @@ elif page == "Stock Prediction":
             })
             st.write(predictions_df)
 
-            # Display recommendation
-            action = recommendation(data, future_predictions)
+            # Get recommendation based on past data and predictions
+            recommendation_result = recommendation(data, future_predictions)
+            
+            # Display the recommendation and details
+            st.subheader("Investment Recommendation")
+            st.write(f"Recommendation: {recommendation_result['Recommendation']}")
+            st.write(f"Recent Average Closing Price: ${recommendation_result['Recent Average Price']}")
+            st.write(f"Predicted Average Closing Price: ${recommendation_result['Predicted Average Price']}")
