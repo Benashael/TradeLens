@@ -64,23 +64,7 @@ def fetch_stock_data(exchange, symbol, start_date, end_date):
     ticker = f"{symbol}.{exchange}" if exchange != "NSE" else symbol  # For NSE, no need to prefix
     stock_data = yf.download(ticker, start=start_date, end=end_date)
     return stock_data
-
-# Function for stock price prediction (using simple Linear Regression for demo)
-'''def predict_stock_prices(data):
-    data['Date'] = pd.to_datetime(data.index)
-    data['Date'] = data['Date'].map(pd.Timestamp.toordinal)
-
-    X = data['Date'].values.reshape(-1, 1)
-    y = data['Close'].values
-
-    model = LinearRegression()
-    model.fit(X, y)
-
-    future_dates = pd.date_range(data.index[-1], periods=30).map(pd.Timestamp.toordinal).values.reshape(-1, 1)
-    future_predictions = model.predict(future_dates)
-
-    return future_dates, future_predictions'''
-
+    
 # Function for stock price prediction (Linear Regression for demonstration)
 def predict_stock_prices(data):
     # Ensure the index is a datetime object
@@ -166,7 +150,7 @@ def recommendation(past_data, future_predictions):
 page = st.sidebar.radio("Select", ["Home", "Stock Information", "Stock Prediction"])
 
 if page  == "Home":
-    st.title()
+    st.title("")
 
 elif page == "Stock Information":
     st.title("Stock Information")
@@ -287,47 +271,6 @@ elif page == "Stock Prediction":
             ax_close.legend(loc="upper left")
             st.pyplot(fig_close)
 
-
-            # Predictions
-            '''future_dates, future_predictions = predict_stock_prices(data)
-            #future_dates = pd.to_datetime(future_dates, origin='julian', unit='D')
-            future_dates = np.clip(future_dates, a_min=1721425, a_max=2262448)  # Valid Julian dates
-            future_dates = pd.to_datetime(future_dates, origin='julian', unit='D')'''
-            # Predictions
-            future_dates = predict_stock_prices(data)
-
-            # Define valid range for Julian ordinals
-            valid_ordinal_min = 1721425  # January 1, 1 CE
-            valid_ordinal_max = 2262448  # December 31, 9999 CE
-
-            if valid_ordinal_min is None or valid_ordinal_max is None:
-                raise ValueError("Valid ordinal range is not properly defined.")
-
-            # Clip future_dates to ensure it stays within valid Julian range
-            future_dates = np.clip(future_dates, a_min=valid_ordinal_min, a_max=valid_ordinal_max)
-            
-            # Convert clipped Julian dates to datetime
-            future_dates = pd.to_datetime(future_dates, origin='julian', unit='D')
-            # Ensure future_dates are within valid ordinal date range
-            #valid_ordinal_min = pd.Timestamp.min.toordinal()  # Smallest valid ordinal date
-            #valid_ordinal_max = pd.Timestamp.max.toordinal()  # Largest valid ordinal date
-            #future_dates = np.clip(future_dates, a_min=valid_ordinal_min, a_max=valid_ordinal_max)
-            
-            # Convert clipped ordinal dates back to datetime
-            #future_dates = pd.to_datetime(future_dates, origin='unix', unit='D', errors='coerce')
-            
-            # Handle any invalid conversions
-            '''future_dates = future_dates.dropna()  # Drop rows where conversion failed (if any)
-
-
-            st.subheader("Stock Price Predictions for Next 30 Days")
-            fig, ax = plt.subplots(figsize=(10, 6))
-            ax.plot(data.index, data['Close'], label="Historical Data")
-            ax.plot(future_dates, future_predictions, label="Predicted Prices", linestyle="--")
-            ax.set_xlabel("Date")
-            ax.set_ylabel("Price")
-            ax.set_title(f"{company} Future Price Prediction")
-            st.pyplot(fig)'''
             # Predictions
             future_dates, future_predictions = predict_stock_prices(data)
             
@@ -354,7 +297,6 @@ elif page == "Stock Prediction":
             st.subheader("Future Predicted Prices")
             predictions_df = pd.DataFrame({"Date": future_dates, "Predicted Price": future_predictions})
             st.write(predictions_df)
-
 
             # Display recommendation
             action = recommendation(data, future_predictions)
