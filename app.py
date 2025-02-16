@@ -376,8 +376,8 @@ elif page == "Quick Links 🔗":
 
     links = {
         "🤖 Model Craft": "https://modelcraft-uihxqxgjthmusarv6kscuz.streamlit.app/",
-        "🧙‍♂️ Vision Wizard": "https://vision-wizard-durnsdepglthkhzx2peekt.streamlit.app/",
         "✍️ TextTrac": "https://texttrac-mmmj5kiucvh9muj66gekp4.streamlit.app/",
+        "🧙‍♂️ Vision Wizard": "https://vision-wizard-durnsdepglthkhzx2peekt.streamlit.app/",
         "📂 Data Weaver": "https://aybzbegfeczo4yfievejqk.streamlit.app/",
         "🛠️ SkillSync": "https://skillsync-b8xdmwmdezbzf66qpbuj5j.streamlit.app/"
     }
