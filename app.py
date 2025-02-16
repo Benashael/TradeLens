@@ -187,7 +187,7 @@ def recommendation(past_data, future_predictions):
 
 # Navigation Menu
 st.sidebar.title("📱 Navigation")
-page = st.sidebar.radio("**🌐 Select a Feature**", ["Home 🏠", "Stock Information 📊", "Stock Prediction 📈"])
+page = st.sidebar.radio("**🌐 Select a Feature**", ["Home 🏠", "Stock Information 📊", "Stock Prediction 📈", "Quick Links 🔗"])
 
 if page  == "Home 🏠":
     # Display a brief description with emojis
@@ -370,3 +370,17 @@ elif page == "Stock Prediction 📈":
             st.write(f"**Recent Average Closing Price**: ${recommendation_result['Recent Average Price']}")
             st.write(f"**Predicted Average Closing Price**: ${recommendation_result['Predicted Average Price']}")
 
+elif page == "Quick Links 🔗":
+    st.header("🔗 Quick Links")
+    st.write("Click on any link below to navigate to the respective application:")
+
+    links = {
+        "🤖 Model Craft": "https://modelcraft-uihxqxgjthmusarv6kscuz.streamlit.app/",
+        "🧙‍♂️ Vision Wizard": "https://vision-wizard-durnsdepglthkhzx2peekt.streamlit.app/",
+        "✍️ TextTrac": "https://texttrac-mmmj5kiucvh9muj66gekp4.streamlit.app/",
+        "📂 Data Weaver": "https://aybzbegfeczo4yfievejqk.streamlit.app/",
+        "🛠️ SkillSync": "https://skillsync-b8xdmwmdezbzf66qpbuj5j.streamlit.app/",
+    }
+    
+    for name, url in links.items():
+        st.link_button(name, url, use_container_width=True)
